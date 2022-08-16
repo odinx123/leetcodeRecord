@@ -5,12 +5,12 @@ public:
         N = n;
         vector<string> r(N, string(N, '.'));
         vector<vector<string>> ans;
-        backtracking(ans, r, 0, 0);
+        backtracking(ans, r, 0);
         
         return ans;
     }
     
-    void backtracking(vector<vector<string>>& ans, vector<string>& r, int n, int pos) {
+    void backtracking(vector<vector<string>>& ans, vector<string>& r, int n) {
         // Base case
         if (n == N) {
             ans.push_back(r);
@@ -18,14 +18,11 @@ public:
         }
         
         // Recursion relation
-        for (int i = pos/N; i < N; ++i) {
-            int j = i == pos/N ? pos%N : 0;
-            for (; j < N; ++j) {
-                if (!isValid(i, j, r)) continue;
-                
-                r[i][j] = 'Q';
-                backtracking(ans, r, n+1, i*N+j+1);
-                r[i][j] = '.';
+        for (int c = 0; c < N; ++c) {
+            if (isValid(n, c, r)) {
+                r[n][c] = 'Q';
+                backtracking(ans, r, n+1);
+                r[n][c] = '.';
             }
         }
     }
@@ -50,10 +47,5 @@ public:
                 return false;
         }
         return true;
-    }
-    
-    Solution() {
-        ios_base::sync_with_stdio(false);
-        cin.tie(nullptr);
     }
 };
