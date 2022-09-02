@@ -11,7 +11,7 @@ public:
 
         if (left != -1) {
             while (right > left && nums[right] <= nums[left]) --right;
-            // 必須要有等於(不然會有相同的數字交換->沒意義)
+            
             swap(nums[left], nums[right]);
         }
 
