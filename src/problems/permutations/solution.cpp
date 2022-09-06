@@ -1,30 +1,32 @@
 class Solution {
+    vector<vector<int>> ans;
+    vector<int> r;
+    bool* state;
 public:
     vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> ans;
+        state = new bool[nums.size()]();
+        r.resize(nums.size());
         
-        sort(nums.begin(), nums.end());
-        do {
-            ans.push_back(nums);
-        } while (nextPermutation(nums));
-
+        backtracking(nums, 0);
+        
+        delete[] state;
         return ans;
     }
-    bool nextPermutation(vector<int>& nums) {
-        int left = -1, right = nums.size()-1;
-        for (int i = nums.size()-1; i > 0; --i) {  // 找到第一個比右邊小的數字
-            if (nums[i-1] < nums[i]) {
-                left = i-1;
-                break;
-            }
+    
+    void backtracking(vector<int>& nums, int pos) {
+        // Base case
+        if (pos == nums.size()) {
+            ans.push_back(r);
+            return;
         }
-
-        if (left == -1) return false;
-
-        while (nums[right] <= nums[left]) --right;  // 找到left右邊比left大的數字
-        swap(nums[left], nums[right]);
-
-        reverse(nums.begin()+left+1, nums.end());  // 交換的數字右邊都會是降序->反轉可以得到最小值
-        return true;
+        
+        // Recursion relation
+        for (int i = 0; i < nums.size(); ++i) {
+            if (state[i]) continue;
+            state[i] = true;
+            r[pos] = nums[i];
+            backtracking(nums, pos+1);
+            state[i] = false;
+        }
     }
 };
