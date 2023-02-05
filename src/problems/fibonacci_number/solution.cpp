@@ -1,18 +1,15 @@
-vector<int> memData;
 class Solution {
 public:
     int fib(int n) {
-        int size = memData.size();
-        if (size-1 >= n)
-            return memData.at(n);
-
-        size = size >= 2 ? size : 2;
+        int preNum = 1, ppreNum = 0;
         
-        memData.resize(n >= 2 ? n+1 : 2);
-        memData.at(1) = 1;
-        for (int i = size; i <= n; ++i)
-            memData.at(i) = memData.at(i-1) + memData.at(i-2);
+        // int ans;
+        for (int i = 0; i < n; ++i) {
+            int temp = preNum + ppreNum;
+            preNum = ppreNum;
+            ppreNum = temp;
+        }
         
-        return memData.at(n);
+        return ppreNum;
     }
 };
