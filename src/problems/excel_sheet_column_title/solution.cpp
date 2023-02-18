@@ -1,20 +1,15 @@
 class Solution {
 public:
-    string convertToTitle(int columnNumber) {
-        string column;
-        
-        while (columnNumber) {
-            if (columnNumber % 26 == 0) {
-                column.push_back('Z');
-                columnNumber = columnNumber / 26 - 1;
-            } else {
-                column.push_back(columnNumber % 26 + 'A' - 1);
-                columnNumber /= 26;
-            }
+    string convertToTitle(int colNum) {
+        string ans;
+        // 除26是第26個數字進位所以要減1(0~25有26個數字)
+        while (colNum-- != 0) {
+            // 'A'+0 ='A' ~ 'A'+25='Z'
+            char curEng = 'A' + colNum % 26;
+            ans = curEng + ans;
+            colNum /= 26;
         }
-        
-        reverse(column.begin(), column.end());
-        
-        return column;
+
+        return ans;
     }
 };
