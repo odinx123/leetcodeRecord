@@ -1,42 +1,29 @@
 class Solution {
 public:
     int candy(vector<int>& ratings) {
-        int num = ratings.size();
+        vector<int> arr(ratings.size(), 1);
         
-        int high = 0, down = 0;
-        bool duplicate = false;
-        for (int i = 1; i < ratings.size(); ++i) {
-            if (ratings.at(i) == ratings.at(i-1)) {  // 把相同數字當作同一點
-                duplicate = true;
-                down = 0;
-                high = 0;
-                continue;
-            }
-            
-            // 到這邊一定是遞增或遞減
-            if (ratings.at(i) > ratings.at(i-1)) {
-                down = 0;
-                num += ++high;
-                duplicate = false;
-            } else {
-                if (duplicate && high)  // 如果有重複且之前是遞增
-                    num += ++down;  // 就正常加法
-                else {
-                    while (i < ratings.size() && ratings.at(i) < ratings.at(i-1)) { // 找出遞減多少位數
-                        ++i;
-                        ++down;  // 遞減位數
-                    }
-                    --i;  // while會讓i多一位
-                    if (high >= down)
-                        num += down*(down-1)/2;  // down先減1，在進行梯形公式(最高點之前遞增時算過了)
-                    else
-                        num += (down+1)*down/2-high;  // 算出遞減的部分有多少再把遞增時多算的減掉
-                }
-                high = 0;
+        // 對左邊的child來說，右邊分數比較高的糖果都比他多。
+        for (int i = 0; i < ratings.size()-1; ++i) {
+            if (ratings[i+1] > ratings[i]) {
+                // 題目只有提到說分數比較高糖果要比較多，沒有說相同分數相同糖果
+                arr[i+1] = arr[i] + 1;
             }
         }
 
-        
-        return num;
+        int cnt = arr.back();
+
+        // 換成對右邊的child來說
+        for (int i = arr.size()-1; i > 0; --i) {
+            if (ratings[i-1] > ratings[i]) {
+                // 比較大的要留下(對左邊child來說還是要符合條件)
+                // 而比較大的可以符合左右兩者的條件
+                arr[i-1] = max(arr[i-1], arr[i] + 1);
+            }
+            cnt += arr[i-1];
+        }
+
+
+        return cnt;
     }
 };
